@@ -61,11 +61,7 @@ public:
     UpdatableHeap() {}
 
     pair<TPriority, TKey> top() const {
-        if (!heap.empty()) {
-            return make_pair(heap[0].priority, heap[0].key);
-        } else {
-            throw out_of_range("-1");
-        }
+        return make_pair(heap[0].priority, heap[0].key);
     }
     
     bool isEmpty(){
@@ -107,13 +103,14 @@ public:
 
     void erase(const TKey &k) {
         if (keyIndexMap.find(k) != keyIndexMap.end()) {
-            unsigned int index = keyIndexMap[k];
+            int index = keyIndexMap[k];
+            int parent = (index - 1)/2;
             keyIndexMap.erase(k);
             heap[index] = heap.back();
             keyIndexMap[heap[index].key] = index;
             heap.pop_back();
-            heapifyUp(index);
-            heapifyDown(index);
+            if(heap[index].priority > heap[parent].priority || (heap[index].priority == heap[parent].priority && heap[index].key > heap[parent].key)) heapifyUp(index);
+            else heapifyDown(index);
         }
     }
 };
