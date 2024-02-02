@@ -1,98 +1,119 @@
-#include <bits/stdc++.h>
-#include <string>
+#include <iostream>
+#include <vector>
+#include <unordered_map>
 
 using namespace std;
 
 template <class TPriority, class TKey>
 class UpdatableHeap {
 private:
-    vector<pair<TPriority, TKey>> heap;
-    map<TKey, int> indexMap;
+    struct HeapNode {
+        TPriority priority;
+        TKey key;
 
+        HeapNode(const TPriority &p, const TKey &k) : priority(p), key(k) {}
+    };
 
-    void heapifyUp(int index){
-        while(index > 0) {
-            int parent = (index - 1) / 2;
-            if(heap[index].first > heap[parent].first || (heap[index].first == heap[parent].first && heap[index].second > heap[parent].second)){
-                swap(heap[index], heap[parent]);
-                indexMap[heap[index].second] = index;
-                indexMap[heap[parent].second] = index;
-                index = parent;
-            } else{
+    vector<HeapNode> heap;
+    unordered_map<TKey, unsigned int> keyIndexMap;
+
+    void heapifyUp(unsigned int index) {
+        while (index > 0) {
+            unsigned int parentIndex = (index - 1) / 2;
+            if (heap[index].priority > heap[parentIndex].priority ||
+                (heap[index].priority == heap[parentIndex].priority && heap[index].key > heap[parentIndex].key)) {
+                swap(heap[index], heap[parentIndex]);
+                keyIndexMap[heap[index].key] = index;
+                keyIndexMap[heap[parentIndex].key] = parentIndex;
+                index = parentIndex;
+            } else {
                 break;
             }
         }
     }
 
-    void heapifyDown(int index){
-        int left = 2 * index + 1;
-        int right = 2 * index + 2;
-        int largest = index;
+    void heapifyDown(unsigned int index) {
+        unsigned int leftChild = 2 * index + 1;
+        unsigned int rightChild = 2 * index + 2;
+        unsigned int largest = index;
 
-        if(left < heap.size() && (heap[left].first > heap[largest].first || (heap[left].first == heap[largest].first && heap[left].second > heap[largest].second))){
-            largest = left;
+        if (leftChild < heap.size() &&
+            (heap[leftChild].priority > heap[largest].priority ||
+             (heap[leftChild].priority == heap[largest].priority && heap[leftChild].key > heap[largest].key))) {
+            largest = leftChild;
         }
 
-        if(right < heap.size() && (heap[right].first > heap[largest].first || (heap[right].first == heap[largest].first && heap[right].second > heap[largest].second))){
-            largest = right;
+        if (rightChild < heap.size() &&
+            (heap[rightChild].priority > heap[largest].priority ||
+             (heap[rightChild].priority == heap[largest].priority && heap[rightChild].key > heap[largest].key))) {
+            largest = rightChild;
         }
 
-        if(largest != index){
+        if (largest != index) {
             swap(heap[index], heap[largest]);
-            indexMap[heap[index].second] = index;
-            indexMap[heap[largest].second] = largest;
+            keyIndexMap[heap[index].key] = index;
+            keyIndexMap[heap[largest].key] = largest;
             heapifyDown(largest);
         }
     }
 
-    
 public:
+    UpdatableHeap() {}
+
+    pair<TPriority, TKey> top() const {
+        if (!heap.empty()) {
+            return make_pair(heap[0].priority, heap[0].key);
+        } else {
+            throw out_of_range("-1");
+        }
+    }
+    
+    bool isEmpty(){
+       return heap.empty();
+    }
+    
+    void pop() {
+        if (!heap.empty()) {
+            keyIndexMap.erase(heap[0].key);
+            heap[0] = heap.back();
+            keyIndexMap[heap[0].key] = 0;
+            heap.pop_back();
+            heapifyDown(0);
+        }
+    }
+
+    void insertOrUpdate(const TPriority &p, const TKey &k) {
+        if (keyIndexMap.find(k) != keyIndexMap.end()) {
+        
+            unsigned int index = keyIndexMap[k];
+            heap[index].priority = p;
+            heapifyUp(index);
+            heapifyDown(index);
+        } else {
+        
+            heap.push_back(HeapNode(p, k));
+            keyIndexMap[k] = heap.size() - 1;
+            heapifyUp(heap.size() - 1);
+        }
+    }
 
     bool isInserted(const TKey &k) const {
-        return indexMap.find(k) != indexMap.end();
+        return keyIndexMap.find(k) != keyIndexMap.end();
     }
 
     int getSize() const {
         return heap.size();
     }
 
-    bool isEmpty(){
-        return heap.empty();
-    }
-
-    pair<TPriority, TKey> top() const{
-        return heap[0];
-    }
-
-    void pop(){
-        indexMap.erase(heap[0].second);
-        heap[0] = heap.back();
-        indexMap[heap[0].second] = 0;
-        heap.pop_back();
-        heapifyDown(0);
-    }
-    
-    void insertOrUpdate(const TPriority &p, const TKey &k){
-        if(indexMap.find(k) != indexMap.end()){
-            erase(k);
-        }
-        heap.push_back({p,k});
-        indexMap[k] = (int)heap.size() - 1;
-        heapifyUp((int)heap.size() - 1);
-    }
-
     void erase(const TKey &k) {
-        if(indexMap.find(k) != indexMap.end()){
-            int index = indexMap[k];
-            int parent = (index - 1)/2;
-            indexMap.erase(k);
+        if (keyIndexMap.find(k) != keyIndexMap.end()) {
+            unsigned int index = keyIndexMap[k];
+            keyIndexMap.erase(k);
             heap[index] = heap.back();
-            indexMap[heap[index].second] = index;
+            keyIndexMap[heap[index].key] = index;
             heap.pop_back();
-
-            if(heap[index] > heap[parent]) heapifyUp(index);
-            else heapifyDown(index);
-
+            heapifyUp(index);
+            heapifyDown(index);
         }
     }
 };
