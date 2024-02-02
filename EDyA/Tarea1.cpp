@@ -71,10 +71,13 @@ public:
     void pop() {
         if (!heap.empty()) {
             keyIndexMap.erase(heap[0].key);
-            heap[0] = heap.back();
-            keyIndexMap[heap[0].key] = 0;
-            heap.pop_back();
-            heapifyDown(0);
+            if(heap.size() > 1){
+                heap[0] = heap.back();
+                keyIndexMap[heap[0].key] = 0;
+                heap.pop_back();
+                heapifyDown(0);
+            } else heap.clear();
+            
         }
     }
 
@@ -104,13 +107,17 @@ public:
     void erase(const TKey &k) {
         if (keyIndexMap.find(k) != keyIndexMap.end()) {
             int index = keyIndexMap[k];
-            int parent = (index - 1)/2;
-            keyIndexMap.erase(k);
-            heap[index] = heap.back();
-            keyIndexMap[heap[index].key] = index;
-            heap.pop_back();
-            if(heap[index].priority > heap[parent].priority || (heap[index].priority == heap[parent].priority && heap[index].key > heap[parent].key)) heapifyUp(index);
-            else heapifyDown(index);
+            keyIndexMap.erase(keyIndexMap.find(k));
+            
+            if(index == (int)heap.size() - 1) heap.pop_back();
+             
+            else{
+                heap[index] = heap.back();
+                keyIndexMap[heap[index].key] = index;
+                heap.pop_back();
+                heapifyUp(index);
+                heapifyDown(index);
+            }
         }
     }
 };
