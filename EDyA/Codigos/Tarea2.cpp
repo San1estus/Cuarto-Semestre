@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 #define MAXN 50000
-#define LOG_MAXN 16+2
+#define LOG_MAXN 16
 #define isOn(S,j) (S& (1<<j))
 
 
@@ -10,14 +10,14 @@ int parent[MAXN][LOG_MAXN];
 
 int val[MAXN]; 
 vector<int> listAdy[MAXN]; 
-int profu[MAXN]; 
+int depth[MAXN]; 
 long long sumParents[MAXN]; 
 
 
 
 void DFS(int nodoAct, int nodoAnt){
 	parent[nodoAct][0] = nodoAnt;
-	profu[nodoAct] = (nodoAnt==-1)? 0: profu[nodoAnt] + 1; 
+	depth[nodoAct] = (nodoAnt==-1)? 0: depth[nodoAnt] + 1; 
 	
 	sumParents[nodoAct] = val[nodoAct];
 	sumParents[nodoAct] += (nodoAnt==-1)? 0: sumParents[nodoAnt];
@@ -51,7 +51,7 @@ void sparseTable(int N) {
 
 int query(int nodo, int d){
     int sum = 0;
-    if( d>=profu[nodo] ) 
+    if( d >=depth [nodo] ) 
 		return sumParents[nodo];
    	if( d==0)  
 		return val[nodo];
@@ -67,13 +67,13 @@ int query(int nodo, int d){
 }
 
 void print(int N, int arr[MAXN][LOG_MAXN]){
-	cout << '\n';
+	cout << endl;
 	for( int i=0; i < N ; i++ ) {
 		cout << i << ": ";
 		for( int j=0; j < 5; j++ ){
 			cout << arr[i][j] << ' ';
 		}
-		cout << '\n';
+		cout << endl;
 	}
 }
 
@@ -110,11 +110,11 @@ int main(void){
     print(N,SP);
     for( int i=0; i<N ; i++ ) {
     	cout << sumParents[i] << "  ";
-    }cout << '\n';
+    }cout << endl;
 
 	for( int i=0; i<Q; i++) {
         cin >> a >> b;
-        cout << query(a, b) << '\n';
+        cout << query(a, b) << endl;
     }
 
 	return 0;
