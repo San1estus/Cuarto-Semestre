@@ -3,24 +3,21 @@
 using namespace std;
 
 #define isOn(S,j) (S& (1<<j))
-#define MAXN 50000
-#define LOG_MAXN 16
 
-int val[MAXN]; 
-vector<long long> listAdy[MAXN]; 
-int depth[MAXN]; 
+int val[50000]; 
+vector<long long> listAdy[50000]; 
+int depth[50000]; 
 
-long long sumParents[MAXN]; 
-long long ST[MAXN][LOG_MAXN];
-int parent[MAXN][LOG_MAXN]; 
+long long sumParents[50000]; 
+long long ST[50000][16];
+int parent[50000][16]; 
 
 void DFS(int currentNode, int prevNode){
+    sumParents[currentNode] = val[currentNode];
+    sumParents[currentNode] += (prevNode==-1)? 0 : sumParents[prevNode];
 
     parent[currentNode][0] = prevNode;
     depth[currentNode] = (prevNode == -1) ? 0 : depth[prevNode] + 1; 
-    
-    sumParents[currentNode] = val[currentNode];
-    sumParents[currentNode] += (prevNode==-1)? 0 : sumParents[prevNode];
     
     for(int n : listAdy[currentNode]){
         if (n != prevNode){
@@ -31,9 +28,9 @@ void DFS(int currentNode, int prevNode){
 
 void sparseTableParents(int N) {
     for(int j = 1; (1 << j) <= N; j++){
-        for(int nodo = 0; nodo < N; nodo++){
-            if(parent[nodo][j-1] != -1){
-                parent[nodo][j] = parent[parent[nodo][j-1]][j-1];
+        for(int node = 0; node < N; node++){
+            if(parent[node][j-1] != -1){
+                parent[node][j] = parent[parent[node][j-1]][j-1];
             }
         }
     }
@@ -41,52 +38,48 @@ void sparseTableParents(int N) {
 
 void sparseTable(int N) {
     for(int j = 1; (1 << j) <= N; j++){
-        for(int nodo = 0; nodo < N; nodo++){
-            if(parent[nodo][j-1] != -1 && parent[nodo][j] != -1){
-                    ST[nodo][j] = ST[nodo][j-1] + ST[parent[nodo][j-1]][j-1];
+        for(int node = 0; node < N; node++){
+            if(parent[node][j-1] != -1 && parent[node][j] != -1){
+                    ST[node][j] = ST[node][j-1] + ST[parent[node][j-1]][j-1];
             }
         }
     }
 }
 
-long long query(int nodo, int d){
+long long query(int node, int d){
     long long sum = 0;
-    if(d >= depth [nodo]) 
-        return sumParents[nodo];
+    if(d >= depth [node]) 
+        return sumParents[node];
        if(d == 0)  
-        return val[nodo];
+        return val[node];
     d++;
 
-    for(int i=31; i >= 0; i--){
+    for(int i = 31; i >= 0; i--){
         if(isOn(d,i)) {
-            sum += ST[nodo][i];
-            nodo = parent[nodo][i];      
+            sum += ST[node][i];
+            node = parent[node][i];      
         }   
     }
     return sum;
 }
 
 int main(void){
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
-    cout.tie(0);
-
-    int N, Q, a, b;
+    int N, Q, l, r;
     cin >> N >> Q;
 
-    for(int i=0; i < N; i++){
+    for(int i = 0; i < N; i++){
         cin >> val[i];
         ST[i][0] = val[i];
     }
 
-    for(int i=0; i<N-1; i++){
-        cin >> a >> b;
-        listAdy[a].push_back(b);
-        listAdy[b].push_back(a);
+    for(int i = 0; i < N-1; i++){
+        cin >> l >> r;
+        listAdy[l].push_back(r);
+        listAdy[r].push_back(l);
     }
 
-    for(int i=0; i < MAXN; i++){
-        for(int j=0; j < LOG_MAXN ; j++){
+    for(int i = 0; i < 50000; i++){
+        for(int j = 0; j < 16 ; j++){
             parent[i][j] = -1;
         }
     }
@@ -98,8 +91,8 @@ int main(void){
 
 
     for(int i=0; i<Q; i++) {
-        cin >> a >> b;
-        cout << query(a, b) << endl;
+        cin >> l >> r;
+        cout << query(l, r) << endl;
     }
     return 0;
 }
