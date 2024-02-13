@@ -8,7 +8,7 @@ int ST[MAXN][LOG_MAXN];
 int parent[MAXN][LOG_MAXN]; 
 
 int val[MAXN]; 
-vector<long long> listAdy[MAXN]; 
+vector<int> listAdy[MAXN]; 
 int depth[MAXN]; 
 long long sumParents[MAXN]; 
 
@@ -16,7 +16,7 @@ long long sumParents[MAXN];
 
 void DFS(int currentNode, int prevNode){
 	parent[currentNode][0] = prevNode;
-	depth[currentNode] = (prevNode == -1)? 0: depth[prevNode] + 1; 
+	depth[currentNode] = (prevNode == -1) ? 0: depth[prevNode] + 1; 
 	
 	sumParents[currentNode] = val[currentNode];
 	sumParents[currentNode] += (prevNode==-1)? 0: sumParents[prevNode];
@@ -32,7 +32,7 @@ void sparseTableParent(int N) {
     for( int j = 1; (1 << j) <= N; j++ ){
         for( int nodo = 0; nodo < N; nodo++ ){
             if( parent[nodo][j-1] != -1 ){
-                parent[nodo][j] = parent[ parent[nodo][j-1] ][j-1];
+                parent[nodo][j] = parent[parent[nodo][j-1]][j-1];
             }
         }
     }
@@ -42,7 +42,7 @@ void sparseTable(int N) {
     for( int j = 1; (1 << j) <= N; j++ ){
         for( int nodo = 0; nodo < N; nodo++ ){
             if(parent[nodo][j-1] != -1 && parent[nodo][j] != -1 ){
-                	ST[nodo][j] = ST[nodo][j-1] + ST[ parent[nodo][j-1] ][j-1];
+                	ST[nodo][j] = ST[nodo][j-1] + ST[parent[nodo][j-1]][j-1];
             }
         }
     }
@@ -107,7 +107,8 @@ int main(void){
     sparseTable(N);
 
     print(N, parent);
-    print(N,ST);
+    print(N, ST);
+
     for( int i=0; i<N ; i++ ) {
     	cout << sumParents[i] << "  ";
     }cout << endl;
@@ -116,6 +117,5 @@ int main(void){
         cin >> a >> b;
         cout << query(a, b) << endl;
     }
-
 	return 0;
 }
