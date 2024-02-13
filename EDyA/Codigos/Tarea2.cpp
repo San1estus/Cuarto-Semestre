@@ -15,16 +15,16 @@ long long sumParents[MAXN];
 
 
 
-void DFS(int nodoAct, int nodoAnt){
-	parent[nodoAct][0] = nodoAnt;
-	depth[nodoAct] = (nodoAnt==-1)? 0: depth[nodoAnt] + 1; 
+void DFS(int currentNode, int prevNode){
+	parent[currentNode][0] = prevNode;
+	depth[currentNode] = (prevNode==-1)? 0: depth[prevNode] + 1; 
 	
-	sumParents[nodoAct] = val[nodoAct];
-	sumParents[nodoAct] += (nodoAnt==-1)? 0: sumParents[nodoAnt];
+	sumParents[currentNode] = val[currentNode];
+	sumParents[currentNode] += (prevNode==-1)? 0: sumParents[prevNode];
 	
-    for( int n : listAdy[nodoAct] ){
-        if ( n != nodoAnt ){
-            DFS(n, nodoAct);
+    for( int n : listAdy[currentNode] ){
+        if ( n != prevNode ){
+            DFS(n, currentNode);
         }
     }
 }
@@ -89,6 +89,7 @@ int main(void){
         cin >> val[i];
         SP[i][0] = val[i];
     }
+
     for(int i=0; i<N-1; i++){
         cin >> a >> b;
         listAdy[a].push_back(b);
