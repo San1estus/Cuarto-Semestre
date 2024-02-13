@@ -12,9 +12,6 @@ long long sumParents[MAXN];
 int ST[MAXN][LOG_MAXN];
 int parent[MAXN][LOG_MAXN]; 
 
-
-
-
 void DFS(int currentNode, int prevNode){
 	parent[currentNode][0] = prevNode;
 	depth[currentNode] = (prevNode == -1) ? 0: depth[prevNode] + 1; 
@@ -51,9 +48,9 @@ void sparseTable(int N) {
 
 long long query(int nodo, int d){
     long long sum = 0;
-    if( d >=depth [nodo] ) 
+    if( d >= depth [nodo] ) 
 		return sumParents[nodo];
-   	if( d==0)  
+   	if( d == 0)  
 		return val[nodo];
     d++;
 
