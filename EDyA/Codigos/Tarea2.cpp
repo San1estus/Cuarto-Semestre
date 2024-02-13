@@ -1,5 +1,7 @@
 #include <bits/stdc++.h>
+
 using namespace std;
+
 #define isOn(S,j) (S& (1<<j))
 #define MAXN 50000
 #define LOG_MAXN 16
@@ -13,23 +15,24 @@ int ST[MAXN][LOG_MAXN];
 int parent[MAXN][LOG_MAXN]; 
 
 void DFS(int currentNode, int prevNode){
+
 	parent[currentNode][0] = prevNode;
-	depth[currentNode] = (prevNode == -1) ? 0: depth[prevNode] + 1; 
+	depth[currentNode] = (prevNode == -1) ? 0 : depth[prevNode] + 1; 
 	
 	sumParents[currentNode] = val[currentNode];
-	sumParents[currentNode] += (prevNode==-1)? 0: sumParents[prevNode];
+	sumParents[currentNode] += (prevNode==-1)? 0 : sumParents[prevNode];
 	
-    for(int n : listAdy[currentNode] ){
-        if ( n != prevNode ){
+    for(int n : listAdy[currentNode]){
+        if (n != prevNode){
             DFS(n, currentNode);
         }
     }
 }
 
-void sparseTableParent(int N) {
-    for( int j = 1; (1 << j) <= N; j++ ){
-        for( int nodo = 0; nodo < N; nodo++ ){
-            if( parent[nodo][j-1] != -1 ){
+void sparseTableParents(int N) {
+    for(int j = 1; (1 << j) <= N; j++){
+        for(int nodo = 0; nodo < N; nodo++){
+            if(parent[nodo][j-1] != -1){
                 parent[nodo][j] = parent[parent[nodo][j-1]][j-1];
             }
         }
@@ -37,9 +40,9 @@ void sparseTableParent(int N) {
 }
 
 void sparseTable(int N) {
-    for( int j = 1; (1 << j) <= N; j++ ){
-        for( int nodo = 0; nodo < N; nodo++ ){
-            if(parent[nodo][j-1] != -1 && parent[nodo][j] != -1 ){
+    for(int j = 1; (1 << j) <= N; j++){
+        for(int nodo = 0; nodo < N; nodo++){
+            if(parent[nodo][j-1] != -1 && parent[nodo][j] != -1){
                 	ST[nodo][j] = ST[nodo][j-1] + ST[parent[nodo][j-1]][j-1];
             }
         }
@@ -48,14 +51,14 @@ void sparseTable(int N) {
 
 long long query(int nodo, int d){
     long long sum = 0;
-    if( d >= depth [nodo] ) 
+    if(d >= depth [nodo]) 
 		return sumParents[nodo];
-   	if( d == 0)  
+   	if(d == 0)  
 		return val[nodo];
     d++;
 
-    for( int i=31; i >= 0; i-- ){
-        if( isOn(d,i) ) {
+    for(int i=31; i >= 0; i--){
+        if(isOn(d,i)) {
             sum += ST[nodo][i];
             nodo = parent[nodo][i];      
         }   
@@ -65,9 +68,9 @@ long long query(int nodo, int d){
 
 void print(int N, int arr[MAXN][LOG_MAXN]){
 	cout << endl;
-	for( int i=0; i < N ; i++ ) {
+	for(int i=0; i < N ; i++) {
 		cout << i << ": ";
-		for( int j=0; j < 5; j++ ){
+		for(int j=0; j < 5; j++){
 			cout << arr[i][j] << ' ';
 		}
 		cout << endl;
@@ -93,25 +96,25 @@ int main(void){
         listAdy[b].push_back(a);
     }
 
-	for( int i=0; i < MAXN; i++ ){
-		for( int j=0; j < LOG_MAXN ; j++ ){
+	for(int i=0; i < MAXN; i++){
+		for(int j=0; j < LOG_MAXN ; j++){
 			parent[i][j] = -1;
 		}
 	}
 	
 	DFS(0, -1);
 
-	sparseTableParent(N);
+	sparseTableParents(N);
     sparseTable(N);
 
     print(N, parent);
     print(N, ST);
 
-    for( int i=0; i<N ; i++ ) {
+    for(int i=0; i<N ; i++) {
     	cout << sumParents[i] << "  ";
     }cout << endl;
 
-	for( int i=0; i<Q; i++) {
+	for(int i=0; i<Q; i++) {
         cin >> a >> b;
         cout << query(a, b) << endl;
     }
