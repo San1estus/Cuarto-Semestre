@@ -1,72 +1,112 @@
 #include <bits/stdc++.h>
 using namespace std;
+#define MAXN 50000
+#define LOG_MAXN 16+2
+#define isOn(S,j) (S& (1<<j))
 
 
-struct ST{
-    int n;
-    vector<int> a, st;
+int SP[MAXN][LOG_MAXN];
+int Ancest[MAXN][LOG_MAXN]; 
 
-    ST(vector<int> &a){
-        n = a.size();
-        this->a = a;
-        st.resize(4*n + 1);
-        build(0, n-1, 0);
-        return;
-    }
+int val[MAXN]; 
+vector<int> listAdy[MAXN]; 
+int profu[MAXN]; 
+int sumTodosAnces[MAXN]; 
 
-    void build(int l, int r, int nd){
-        if(l == r){
-            st[nd] = a[l];
-            return;
+
+
+void DFS(int nodoAct, int nodoAnt){
+	Ancest[nodoAct][0] = nodoAnt;
+	profu[nodoAct] = (nodoAnt==-1)? 0: profu[nodoAnt] + 1; 
+	
+	sumTodosAnces[nodoAct] = val[nodoAct];
+	sumTodosAnces[nodoAct] += (nodoAnt==-1)? 0: sumTodosAnces[nodoAnt];
+	
+    for( int n : listAdy[nodoAct] ){
+        if ( n != nodoAnt ){
+            DFS(n, nodoAct);
         }
-        build(l, mid(l, r), leftCh(nd));
-        build(mid(l, r)+1, r, rightCh(nd));
-        st[nd] = max(st[leftCh(nd)], st[rightCh(nd)]);
-        return;
     }
+}
 
-
-    int nxtGreaterEq(int l, int r, int nd, int x){
-        if(st[nd] < x) return -1;
-        if(l == r){
-            a[l] = st[nd] = a[l]-x;
-            return l;
+void sparseTableAncest(int N) {
+    for( int j = 1; (1 << j) <= N; j++ ){
+        for( int nodo = 0; nodo < N; nodo++ ){
+            if( Ancest[nodo][j-1] != -1 ){
+                Ancest[nodo][j] = Ancest[ Ancest[nodo][j-1] ][j-1];
+            }
         }
+    }
+}
 
-        int ans = -1;
-        if(st[leftCh(nd)] >= x) ans = nxtGreaterEq(l, mid(l, r), leftCh(nd), x);
-        else ans = nxtGreaterEq(mid(l, r)+1, r, rightCh(nd), x);
+void sparseTable(int N) {
+    for( int j = 1; (1 << j) <= N; j++ ){
+        for( int nodo = 0; nodo < N; nodo++ ){
+            if( Ancest[nodo][j-1] != -1 && Ancest[nodo][j]!=-1 ){
+                	SP[nodo][j] = SP[nodo][j-1] + SP[ Ancest[nodo][j-1] ][j-1];
+            }
+        }
+    }
+}
 
-        st[nd] = max(st[leftCh(nd)], st[rightCh(nd)]);
+int query(int nodo, int d){
+    int sum = 0;
+    if( d>=profu[nodo] ) 
+		return sumTodosAnces[nodo];
+   	if( d==0)  
+		return val[nodo];
+    d++;
+    for( int i=31; i>= 0; i-- ){
+        if( isOn(d,i) ) {
+            sum += SP[nodo][i];
+            nodo = Ancest[nodo][i];      
+        }   
+    }
+    return sum;
+}
 
-        return ans;
+void print(int N, int arr[MAXN][LOG_MAXN]){
+	cout << '\n';
+	for( int i=0; i<N ; i++ ) {
+		cout << i << ": ";
+		for( int j=0; j <5; j++ ){
+			cout << arr[i][j] << ' ';
+		}
+		cout << '\n';
+	}
+}
+
+int main(void){
+	ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
+	int N, Q, a, b;
+    cin >> N >> Q;
+
+    for(int i=0; i<N; i++){
+        cin >> val[i];
+        SP[i][0] = val[i];
+    }
+    for(int i=0; i<N-1; i++){
+        cin >> a >> b;
+        listAdy[a].push_back(b);
+        listAdy[b].push_back(a);
     }
 
-    int nxtGreaterEq(int x){
-        return nxtGreaterEq(0, n-1, 0, x);
+	for( int i=0; i<MAXN; i++ ){
+		for( int j=0; j<LOG_MAXN ; j++ ){
+			Ancest[i][j] = -1;
+		}
+	}
+	
+	DFS(0, -1);
+	sparseTableAncest(N);
+    sparseTable(N);
+
+	for( int i=0; i<Q; i++) {
+        cin >> a >> b;
+        cout << query(a, b) << '\n';
     }
-
-private:
-    inline int mid(int l, int r){ return (l + r)/2; }
-    inline int leftCh(int nd){ return 2*nd+1; }
-    inline int rightCh(int nd){ return 2*nd+2; }
-};
-
-int main()
-{
-    ios_base::sync_with_stdio(0); cin.tie(0);
-
-    int n,m,x;
-    cin >> n >> m;
-    vector<int> a(n);
-    for(int i=0; i<n; i++) cin >> a[i];
-
-    ST st(a);
-    for(int i=0; i<m; i++){
-        cin >> x;
-        cout << st.nxtGreaterEq(x)+1 << " ";
-    }
-    cout << "\n";
-
-    return 0;
+	return 0;
 }
