@@ -6,21 +6,21 @@ using namespace std;
 
 
 int SP[MAXN][LOG_MAXN];
-int Ancest[MAXN][LOG_MAXN]; 
+int parent[MAXN][LOG_MAXN]; 
 
 int val[MAXN]; 
 vector<int> listAdy[MAXN]; 
 int profu[MAXN]; 
-int sumTodosAnces[MAXN]; 
+long long sumParents[MAXN]; 
 
 
 
 void DFS(int nodoAct, int nodoAnt){
-	Ancest[nodoAct][0] = nodoAnt;
+	parent[nodoAct][0] = nodoAnt;
 	profu[nodoAct] = (nodoAnt==-1)? 0: profu[nodoAnt] + 1; 
 	
-	sumTodosAnces[nodoAct] = val[nodoAct];
-	sumTodosAnces[nodoAct] += (nodoAnt==-1)? 0: sumTodosAnces[nodoAnt];
+	sumParents[nodoAct] = val[nodoAct];
+	sumParents[nodoAct] += (nodoAnt==-1)? 0: sumParents[nodoAnt];
 	
     for( int n : listAdy[nodoAct] ){
         if ( n != nodoAnt ){
@@ -29,11 +29,11 @@ void DFS(int nodoAct, int nodoAnt){
     }
 }
 
-void sparseTableAncest(int N) {
+void sparseTableParent(int N) {
     for( int j = 1; (1 << j) <= N; j++ ){
         for( int nodo = 0; nodo < N; nodo++ ){
-            if( Ancest[nodo][j-1] != -1 ){
-                Ancest[nodo][j] = Ancest[ Ancest[nodo][j-1] ][j-1];
+            if( parent[nodo][j-1] != -1 ){
+                parent[nodo][j] = parent[ parent[nodo][j-1] ][j-1];
             }
         }
     }
@@ -42,8 +42,8 @@ void sparseTableAncest(int N) {
 void sparseTable(int N) {
     for( int j = 1; (1 << j) <= N; j++ ){
         for( int nodo = 0; nodo < N; nodo++ ){
-            if( Ancest[nodo][j-1] != -1 && Ancest[nodo][j]!=-1 ){
-                	SP[nodo][j] = SP[nodo][j-1] + SP[ Ancest[nodo][j-1] ][j-1];
+            if(parent[nodo][j-1] != -1 && parent[nodo][j] != -1 ){
+                	SP[nodo][j] = SP[nodo][j-1] + SP[ parent[nodo][j-1] ][j-1];
             }
         }
     }
@@ -52,14 +52,15 @@ void sparseTable(int N) {
 int query(int nodo, int d){
     int sum = 0;
     if( d>=profu[nodo] ) 
-		return sumTodosAnces[nodo];
+		return sumParents[nodo];
    	if( d==0)  
 		return val[nodo];
     d++;
-    for( int i=31; i>= 0; i-- ){
+
+    for( int i=31; i >= 0; i-- ){
         if( isOn(d,i) ) {
             sum += SP[nodo][i];
-            nodo = Ancest[nodo][i];      
+            nodo = parent[nodo][i];      
         }   
     }
     return sum;
@@ -67,9 +68,9 @@ int query(int nodo, int d){
 
 void print(int N, int arr[MAXN][LOG_MAXN]){
 	cout << '\n';
-	for( int i=0; i<N ; i++ ) {
+	for( int i=0; i < N ; i++ ) {
 		cout << i << ": ";
-		for( int j=0; j <5; j++ ){
+		for( int j=0; j < 5; j++ ){
 			cout << arr[i][j] << ' ';
 		}
 		cout << '\n';
@@ -84,7 +85,7 @@ int main(void){
 	int N, Q, a, b;
     cin >> N >> Q;
 
-    for(int i=0; i<N; i++){
+    for(int i=0; i < N; i++){
         cin >> val[i];
         SP[i][0] = val[i];
     }
@@ -94,19 +95,27 @@ int main(void){
         listAdy[b].push_back(a);
     }
 
-	for( int i=0; i<MAXN; i++ ){
-		for( int j=0; j<LOG_MAXN ; j++ ){
-			Ancest[i][j] = -1;
+	for( int i=0; i < MAXN; i++ ){
+		for( int j=0; j < LOG_MAXN ; j++ ){
+			parent[i][j] = -1;
 		}
 	}
 	
 	DFS(0, -1);
-	sparseTableAncest(N);
+
+	sparseTableParent(N);
     sparseTable(N);
+
+    print(N, parent);
+    print(N,SP);
+    for( int i=0; i<N ; i++ ) {
+    	cout << sumParents[i] << "  ";
+    }cout << '\n';
 
 	for( int i=0; i<Q; i++) {
         cin >> a >> b;
         cout << query(a, b) << '\n';
     }
+
 	return 0;
 }
