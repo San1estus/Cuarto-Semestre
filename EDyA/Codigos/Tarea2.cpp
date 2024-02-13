@@ -4,12 +4,11 @@ using namespace std;
 #define LOG_MAXN 16
 #define isOn(S,j) (S& (1<<j))
 
-
-int SP[MAXN][LOG_MAXN];
+int ST[MAXN][LOG_MAXN];
 int parent[MAXN][LOG_MAXN]; 
 
 int val[MAXN]; 
-vector<int> listAdy[MAXN]; 
+vector<long long> listAdy[MAXN]; 
 int depth[MAXN]; 
 long long sumParents[MAXN]; 
 
@@ -17,12 +16,12 @@ long long sumParents[MAXN];
 
 void DFS(int currentNode, int prevNode){
 	parent[currentNode][0] = prevNode;
-	depth[currentNode] = (prevNode==-1)? 0: depth[prevNode] + 1; 
+	depth[currentNode] = (prevNode == -1)? 0: depth[prevNode] + 1; 
 	
 	sumParents[currentNode] = val[currentNode];
 	sumParents[currentNode] += (prevNode==-1)? 0: sumParents[prevNode];
 	
-    for( int n : listAdy[currentNode] ){
+    for(int n : listAdy[currentNode] ){
         if ( n != prevNode ){
             DFS(n, currentNode);
         }
@@ -43,14 +42,14 @@ void sparseTable(int N) {
     for( int j = 1; (1 << j) <= N; j++ ){
         for( int nodo = 0; nodo < N; nodo++ ){
             if(parent[nodo][j-1] != -1 && parent[nodo][j] != -1 ){
-                	SP[nodo][j] = SP[nodo][j-1] + SP[ parent[nodo][j-1] ][j-1];
+                	ST[nodo][j] = ST[nodo][j-1] + ST[ parent[nodo][j-1] ][j-1];
             }
         }
     }
 }
 
-int query(int nodo, int d){
-    int sum = 0;
+long long query(int nodo, int d){
+    long long sum = 0;
     if( d >=depth [nodo] ) 
 		return sumParents[nodo];
    	if( d==0)  
@@ -59,7 +58,7 @@ int query(int nodo, int d){
 
     for( int i=31; i >= 0; i-- ){
         if( isOn(d,i) ) {
-            sum += SP[nodo][i];
+            sum += ST[nodo][i];
             nodo = parent[nodo][i];      
         }   
     }
@@ -87,7 +86,7 @@ int main(void){
 
     for(int i=0; i < N; i++){
         cin >> val[i];
-        SP[i][0] = val[i];
+        ST[i][0] = val[i];
     }
 
     for(int i=0; i<N-1; i++){
@@ -108,7 +107,7 @@ int main(void){
     sparseTable(N);
 
     print(N, parent);
-    print(N,SP);
+    print(N,ST);
     for( int i=0; i<N ; i++ ) {
     	cout << sumParents[i] << "  ";
     }cout << endl;
