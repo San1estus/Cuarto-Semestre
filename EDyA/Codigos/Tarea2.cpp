@@ -1,16 +1,17 @@
 #include <bits/stdc++.h>
 using namespace std;
+#define isOn(S,j) (S& (1<<j))
 #define MAXN 50000
 #define LOG_MAXN 16
-#define isOn(S,j) (S& (1<<j))
-
-int ST[MAXN][LOG_MAXN];
-int parent[MAXN][LOG_MAXN]; 
 
 int val[MAXN]; 
 vector<int> listAdy[MAXN]; 
 int depth[MAXN]; 
+
 long long sumParents[MAXN]; 
+int ST[MAXN][LOG_MAXN];
+int parent[MAXN][LOG_MAXN]; 
+
 
 
 
