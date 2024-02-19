@@ -7,6 +7,8 @@ int min(int a, int b){
 }
 
 int main(void){
+    freopen("mixmilk.in", "r", stdin);
+
     ios_base::sync_with_stdio(0);
     cin.tie(0);
 
@@ -21,8 +23,10 @@ int main(void){
         buckets[i % 3].second -= amount;
         buckets[(i + 1) % 3].second += amount;
     }
-
+    
+    freopen("mixmilk.out", "w", stdout);
+    
     for(int i = 0; i < 3; i++){
-        cout << buckets[i].second;
+        cout << buckets[i].second << endl;
     }
 }
