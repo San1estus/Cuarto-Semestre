@@ -14,14 +14,18 @@ int main(void){
 
     int capacity, milk;
     vector<pair<int,int>> buckets(3);
-    cin >> capacity >> milk;
-    buckets.push_back({capacity, milk});
+    for(int i = 0; i < 3; i++){
+        cin >> capacity >> milk;
+        buckets[i] = (make_pair(capacity, milk));
+    }
+    
 
     for(int i = 0; i < 100; i++){
         int amount = min(buckets[i % 3].second, buckets[(i + 1) % 3].first - buckets[(i + 1) % 3].second);
 
         buckets[i % 3].second -= amount;
         buckets[(i + 1) % 3].second += amount;
+        
     }
     
     freopen("mixmilk.out", "w", stdout);
