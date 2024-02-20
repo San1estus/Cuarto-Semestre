@@ -1,95 +1,87 @@
-#include <bits/stdc++.h>
+// C++ program to implement persistent segment
+// tree.
+#include "bits/stdc++.h"
 using namespace std;
 
-struct Node{
-    long long sum;
-    Node *leftCh, *rightCh;
+#define MAXN 10001
+#define mid(l, r) (l+r)/2
 
-    Node(){
-        sum = 0;
-        leftCh = rightCh = nullptr;
-    }
+struct Node
+{
+	int val;
+
+	Node* left, *right;
+
+
+	Node(Node* l, Node* r) : val(0), left(l), right(r)
+	{
+		if(l) val += l->val;
+		if(r) val += r->val;
+	}
 };
 
+void build(Node* n, int l, int r)
+{
+	if (l==r)
+	{
+		return;
+	}
+	n->left = new Node(nullptr, nullptr);
+	n->right = new Node(nullptr, nullptr);
+	build(n->left, l, mid(l, r));
+	build(n->right, mid(l, r) + 1, r);
+}
 
-struct PST{
-    int n;
-    vector<Node*> roots;
-    PST(int n){
-        this->n = n;
-        roots.push_back(new Node);
-        build(0, n-1, roots[0]);
-        return;
-    }
-
-    void build(int l, int r, Node* node){
-        if(l == r) return;
-        node->leftCh = new Node;
-        node->rightCh = new Node;
-        build(l, mid(l, r), node->leftCh);
-        build(mid(l, r)+1, r, node->rightCh);
-        node->sum = node->leftCh->sum + node->rightCh->sum;
-        return;
-    }
-
-    void upd(int l, int r, Node* node, int i, int x){
+void upd(Node* node, int l, int r,  int i, int x){
         if(l == r){
-            node->sum += x;
+            node->val += x;
             return;
         }
 
-        Node* new_node = new Node;
+        Node* new_node = new Node(nullptr, nullptr);
         if(i <= mid(l, r)){
-            *new_node = *(node->leftCh);
-            node->leftCh = new_node;
+            *new_node = *(node->left);
+            node->left = new_node;
             upd(l, mid(l, r), new_node, i, x);
-        } else{
-            *new_node = *(node->rightCh);
-            node->rightCh = new_node;
+        }else{
+            *new_node = *(node->left);
+            node->left = new_node;
             upd(mid(l, r)+1, r, new_node, i, x);
         }
 
-        node->sum = node->leftCh->sum + node->rightCh->sum;
+        node->val = node->left->val + node->left->val;
         return;
-    }
-
-    void upd(int i, int x){
-        Node old_root = *roots.back();
-        roots.push_back(new Node);
-        *roots.back() = old_root;
-        upd(0, n-1, roots.back(), i, x);
-        return;
-    }
-
-    int qry(Node* nodel, Node* noder, int k, int l, int r){
-        if (l == r) {
-        return l;
-    }
-
-    int left_count = noder->leftCh->sum - nodel->leftCh->sum;
-
-    if (left_count >= k) {
-        return qry(nodel->leftCh, noder->leftCh, l, mid(l, r), k);
-    }
-
-    return qry(nodel->rightCh, noder->rightCh, mid(l, r) + 1, r, k - left_count);
-    }
-
-    long long qry(int l, int r, int k){
-        return qry(roots[l], roots[r], k, 0, n-1);
-    }
-
-private:
-    inline int mid(int l, int r){ return (l + r)/2; }
-};
+}
 
 
-int main()
+int query(Node* nodeL, Node* nodeR, int L, int R, int k)
 {
-    ios_base::sync_with_stdio(0); cin.tie(0);
-    int n,m;
+	if(L == R) return L;
+
+    int left_count = nodeR->left->val - nodeL->left->val;
+    if(left_count >= k) return query(nodeL->left, nodeR->left, L, mid(L, R), k-left_count);
+    return query(nodeL->right, nodeR->right, mid(L, R) + 1, R, k-left_count);
+}
+
+int main(void)
+{
+	ios_base::sync_with_stdio(0); cin.tie(0);
+    int n, q;
     cin >> n;
+
+    vector<Node*> roots;
     vector<int> a(n);
 
-    return 0;
+    Node* root = new Node(nullptr, nullptr);
+    build(root, 0, n-1);
+    roots[0] = root;
+    
+	for(int i=0; i<n; i++) 
+	    cin >> a[i];
+
+	Node* root = new Node(nullptr, nullptr);
+	build(root, 0, n-1);
+
+
+	return 0;
 }
