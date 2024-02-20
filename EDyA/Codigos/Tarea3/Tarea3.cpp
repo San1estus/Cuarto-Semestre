@@ -1,87 +1,76 @@
-// C++ program to implement persistent segment
-// tree.
-#include "bits/stdc++.h"
+#include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp> // Common file
+#include <ext/pb_ds/tree_policy.hpp> // Including tree_order_statistics_node_update
+using namespace __gnu_pbds;
 using namespace std;
 
-#define MAXN 10001
-#define mid(l, r) (l+r)/2
+typedef tree<
+pair<int,int>,
+null_type,
+less< pair<int,int> >,
+rb_tree_tag,
+tree_order_statistics_node_update>
+ordered_set;
 
-struct Node
-{
-	int val;
+struct ST{
+    int n;
+    vector<int> a;
+    vector<ordered_set> st;
 
-	Node* left, *right;
+    ST(vector<int> &a){
+        this->a = a;
+        n = a.size();
+        st.resize(4*n);
+        build(0, n-1, 0);
+        return;
+    }
 
-
-	Node(Node* l, Node* r) : val(0), left(l), right(r)
-	{
-		if(l) val += l->val;
-		if(r) val += r->val;
-	}
-};
-
-void build(Node* n, int l, int r)
-{
-	if (l==r)
-	{
-		return;
-	}
-	n->left = new Node(nullptr, nullptr);
-	n->right = new Node(nullptr, nullptr);
-	build(n->left, l, mid(l, r));
-	build(n->right, mid(l, r) + 1, r);
-}
-
-void upd(Node* node, int l, int r,  int i, int x){
+    void build(int l, int r, int nd){
         if(l == r){
-            node->val += x;
+            st[nd].insert({a[l],l});
             return;
         }
+        build(l, mid(l, r), leftCh(nd));
+        build(mid(l, r)+1, r, rightCh(nd));
 
-        Node* new_node = new Node(nullptr, nullptr);
-        if(i <= mid(l, r)){
-            *new_node = *(node->left);
-            node->left = new_node;
-            upd(l, mid(l, r), new_node, i, x);
-        }else{
-            *new_node = *(node->left);
-            node->left = new_node;
-            upd(mid(l, r)+1, r, new_node, i, x);
-        }
-
-        node->val = node->left->val + node->left->val;
+        st[nd] = st[leftCh(nd)];
+        for(auto x: st[rightCh(nd)]) st[nd].insert(x);
         return;
-}
+    }
+
+    int qry(int l, int r, int nd, int L, int R, int x){
+        if(r < L || l > R) return 0;
+        if(L <= l && r <= R) return st[nd].size() - st[nd].order_of_key({x, n+1});
+        return qry(l, mid(l, r), leftCh(nd), L, R, x) + qry(mid(l, r)+1, r, rightCh(nd), L, R, x);
+    }
+
+    int qry(int l, int r,  int x){
+        return qry(0, n-1, 0, l, r, x);
+    }
+
+private:
+    inline int mid(int l, int r){ return (l + r)/2; }
+    inline int leftCh(int nd){ return 2*nd+1; }
+    inline int rightCh(int nd){ return 2*nd+2; }
+};
 
 
-int query(Node* nodeL, Node* nodeR, int L, int R, int k)
+
+int main()
 {
-	if(L == R) return L;
-
-    int left_count = nodeR->left->val - nodeL->left->val;
-    if(left_count >= k) return query(nodeL->left, nodeR->left, L, mid(L, R), k-left_count);
-    return query(nodeL->right, nodeR->right, mid(L, R) + 1, R, k-left_count);
-}
-
-int main(void)
-{
-	ios_base::sync_with_stdio(0); cin.tie(0);
-    int n, q;
+    ios_base::sync_with_stdio(0); cin.tie(0);
+    int n,m;
     cin >> n;
-
-    vector<Node*> roots;
     vector<int> a(n);
+    for(int i=0; i<n; i++) cin >> a[i];
 
-    Node* root = new Node(nullptr, nullptr);
-    build(root, 0, n-1);
-    roots[0] = root;
-    
-	for(int i=0; i<n; i++) 
-	    cin >> a[i];
-
-	Node* root = new Node(nullptr, nullptr);
-	build(root, 0, n-1);
-
-
-	return 0;
+    ST st(a);
+    int l, r, x;
+    cin >> m;
+    while(m--){
+        cin >> l >> r >> x;
+        l--; r--;
+        cout << st.qry(l, r, x) << "\n";
+    }
+    return 0;
 }

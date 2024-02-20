@@ -6,7 +6,9 @@
     "xlocale": "cpp",
     "ios": "cpp",
     "xiosbase": "cpp",
-    "valarray": "cpp"
+    "valarray": "cpp",
+    "xutility": "cpp",
+    "vector": "cpp"
   },
   "C_Cpp_Runner.msvcBatchPath": "",
   "C_Cpp_Runner.cCompilerPath": "gcc",
