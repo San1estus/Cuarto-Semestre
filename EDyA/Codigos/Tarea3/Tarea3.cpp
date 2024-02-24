@@ -1,76 +1,142 @@
 #include <bits/stdc++.h>
-#include <ext/pb_ds/assoc_container.hpp> // Common file
-#include <ext/pb_ds/tree_policy.hpp> // Including tree_order_statistics_node_update
-using namespace __gnu_pbds;
-using namespace std;
 
-typedef tree<
-pair<int,int>,
-null_type,
-less< pair<int,int> >,
-rb_tree_tag,
-tree_order_statistics_node_update>
-ordered_set;
+#include <ext/pb_ds/assoc_container.hpp> 
+#include <ext/pb_ds/tree_policy.hpp> 
 
-struct ST{
-    int n;
-    vector<int> a;
-    vector<ordered_set> st;
+using namespace std; 
+using namespace __gnu_pbds; 
 
-    ST(vector<int> &a){
-        this->a = a;
-        n = a.size();
-        st.resize(4*n);
-        build(0, n-1, 0);
+#define vi vector<int> 
+#define pii pair<int, int>
+#define ordered_set tree<pii, null_type, less<pii>, rb_tree_tag,tree_order_statistics_node_update> 
+#define N_MAX 20001
+#define mid(i,j) (i+j)/2
+
+struct SegmentTree{
+    vi A; 
+    vector<ordered_set>  st; 
+    int n; 
+
+    SegmentTree(vi &arr){
+        A = arr;  
+        n = (int)A.size(); 
+        st.assign(4 * n, ordered_set());
+        build (1, 0 , n-1); 
         return;
     }
+    
+    int left (int p) {return 2 * p;} 
+    int right(int p) {return 2 * p + 1;} 
 
-    void build(int l, int r, int nd){
-        if(l == r){
-            st[nd].insert({a[l],l});
+    void build (int p, int L, int R)
+    {
+        if (L == R){ 
+            st[p].insert({A[L], L});
             return;
-        }
-        build(l, mid(l, r), leftCh(nd));
-        build(mid(l, r)+1, r, rightCh(nd));
+        }   
 
-        st[nd] = st[leftCh(nd)];
-        for(auto x: st[rightCh(nd)]) st[nd].insert(x);
+        build(left(p), L, (L+R)/2); 
+        build(right(p), (L+R)/2 + 1, R); 
+            
+        st[p] = st[left(p)]; 
+
+        for(auto x: st[right(p)]) st[p].insert(x);
         return;
-    }
+    } 
 
-    int qry(int l, int r, int nd, int L, int R, int x){
+    int qry(int l, int r, int p, int L, int R, int x){
         if(r < L || l > R) return 0;
-        if(L <= l && r <= R) return st[nd].size() - st[nd].order_of_key({x, n+1});
-        return qry(l, mid(l, r), leftCh(nd), L, R, x) + qry(mid(l, r)+1, r, rightCh(nd), L, R, x);
+        
+        if(L <= l && r <= R) return st[p].order_of_key( {x+1,-1} );
+        
+        int izq = qry(l, mid(l, r), left(p), L, R, x);
+        int der = qry(mid(l, r)+1, r, right(p), L, R, x);
+        return  izq + der;
     }
 
     int qry(int l, int r,  int x){
-        return qry(0, n-1, 0, l, r, x);
+        return qry(0, n-1, 1, l, r, x);
+    }
+    
+    int busqueda_binaria (int L, int R, int k) 
+    {     
+        int mid, i = 0, j = 100000;
+        while(i != j){
+            mid = (i+j)/2;
+
+            if( qry(L, R, mid) <= k ){
+                i = mid+1;
+            } else{
+                j = mid;
+            }
+        }
+         
+        return i;
     }
 
-private:
-    inline int mid(int l, int r){ return (l + r)/2; }
-    inline int leftCh(int nd){ return 2*nd+1; }
-    inline int rightCh(int nd){ return 2*nd+2; }
+
+
+void update (int p, int L, int R, int idx, int val) 
+    { 
+        if(R < idx || idx < L)  return;
+
+        st[p].erase({A[idx], idx});
+        st[p].insert({val, idx});
+        
+        int mid = (L+R)/2;
+
+        if(L != R){
+            update(left(p), L, mid, idx, val); 
+            update(right(p), mid + 1, R, idx, val);  
+        }
+
+        return; 
+    
+    }
+
+    void update (int idx, int val) 
+    {  
+        update(1, 0, n-1, idx, val); 
+        A[idx] = val;
+    }
+    
 };
 
 
-
-int main()
+int main(void)
 {
-    ios_base::sync_with_stdio(0); cin.tie(0);
-    int n,m;
-    cin >> n;
-    vector<int> a(n);
-    for(int i=0; i<n; i++) cin >> a[i];
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
 
-    ST st(a);
-    int l, r, x;
-    cin >> m;
-    while(m--){
-        cin >> l >> r >> x;
-        l--; r--;
-        cout << st.qry(l, r, x) << "\n";
+    int N, M, query; 
+
+    cin >> N; 
+    
+    vi arr(N);
+     
+    for (int i = 0; i < N ; ++i)
+     cin >> arr[i]; 
+
+    SegmentTree st(arr); 
+
+    cin >> M; 
+
+    while(M--){
+        cin >> query;
+        if(query == 0){
+            int l, r, k;
+            cin >> l >> r >>k;
+            cout << st.busqueda_binaria(l, r, k) << endl;
+        }
+        
+        if(query == 1){
+            int idx, val;
+            cin >> idx >> val;
+            st.update(idx, val);
+        }
     }
+
+
     return 0;
 }
