@@ -58,7 +58,7 @@ struct SegmentTree{
         return qry(0, n-1, 1, l, r, x);
     }
     
-    int busqueda_binaria (int L, int R, int k) 
+    int binary_search (int L, int R, int k) 
     {     
         int mid, i = 0, j = 100000;
         while(i != j){
@@ -127,7 +127,7 @@ int main(void)
         if(query == 0){
             int l, r, k;
             cin >> l >> r >>k;
-            cout << st.busqueda_binaria(l, r, k) << endl;
+            cout << st.binary_search(l, r, k) << endl;
         }
         
         if(query == 1){
