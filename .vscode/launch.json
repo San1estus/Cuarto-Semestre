@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/jrodr/OneDrive/Documentos/GitHub/Cuarto-Semestre/EDyA/Codigos/Tarea3",
-      "program": "c:/Users/jrodr/OneDrive/Documentos/GitHub/Cuarto-Semestre/EDyA/Codigos/Tarea3/build/Debug/outDebug",
+      "cwd": "c:/Users/jrodr/OneDrive/Documentos/GitHub/Cuarto-Semestre/USACO/The-Cow-Signal",
+      "program": "c:/Users/jrodr/OneDrive/Documentos/GitHub/Cuarto-Semestre/USACO/The-Cow-Signal/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
