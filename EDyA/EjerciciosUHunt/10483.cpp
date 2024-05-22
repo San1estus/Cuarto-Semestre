@@ -1,3 +1,5 @@
+/*De la tercera edición*/
+
 /*
 Nos interesa 3 numeros tales que a*b*c=a+b+c, notemos que
 a*b*c=a+b+c => c(a*b-1)=a+b
