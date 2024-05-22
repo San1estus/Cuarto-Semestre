@@ -27,6 +27,14 @@ void eulerTree(int u, int &index)
 	}
 }
 
+void printEulerTour(int root, int N)
+{
+    int index = 0;  
+    eulerTree(root, index);
+    for (int i = 0; i < (2*N-1); i++)
+        cout << Euler[i] << " ";
+}
+
 int main()
 {
 	int N, Q, val1, val2;
@@ -39,9 +47,10 @@ int main()
 
     for(int i = 0; i < N-1; i++){
         cin >> val1 >> val2;
-        add_edge(val1, val2)
+        add_edge(val1, val2);
     }
     
+    printEulerTour(0, N-1);
 
 	return 0;
 }
