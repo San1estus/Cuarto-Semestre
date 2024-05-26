@@ -1,4 +1,4 @@
-/*De la tercera edición*/
+/*Tercera edición*/
 
 /*
 Nos interesa 3 numeros tales que a*b*c=a+b+c, notemos que

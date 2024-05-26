@@ -1,4 +1,4 @@
-/*De la tercera edición*/
+/*Tercera edición*/
 
 #include <bits/stdc++.h>
 using namespace std;
