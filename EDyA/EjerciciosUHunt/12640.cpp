@@ -22,7 +22,9 @@ registra el maximo total alcanzado hasta el i-esimo numero.*/
 int main()
 {
     ios_base::sync_with_stdio(0);
-    cin.tie(0);
+	cin.tie(0);
+    //freopen("input.in", "r", stdin);
+    //freopen("output.out", "w", stdout);
     string s;
     freopen("input.in", "r", stdin);
     freopen("input.out", "w", stdout);

@@ -3,9 +3,10 @@
 using namespace std;
 
 int main() {
-	ios_base::sync_with_stdio(false);
-	cin.tie(NULL);
-
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+    //freopen("input.in", "r", stdin);
+    //freopen("output.out", "w", stdout);
 	int p, a, b, c, d, n;
 	while(cin >> p >> a >> b >> c >> d >> n){
 	    double declinacion = 0;

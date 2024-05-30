@@ -35,6 +35,10 @@ bool comp(const sep_num &a, const sep_num &b) {
 }
 
 int main(void) {
+    ios_base::sync_with_stdio(0);
+	cin.tie(0);
+    //freopen("input.in", "r", stdin);
+    //freopen("output.out", "w", stdout);
     int L1, L2, R1, R2; 
     char dot;
     

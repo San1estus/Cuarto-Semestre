@@ -5,7 +5,9 @@ using namespace std;
 
 int main() {
     ios_base::sync_with_stdio(0);
-    cin.tie(0);
+	cin.tie(0);
+    //freopen("input.in", "r", stdin);
+    //freopen("output.out", "w", stdout);
     int n;
     cin >> n;
     vector<string> lines(5);

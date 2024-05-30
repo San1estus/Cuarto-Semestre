@@ -41,7 +41,9 @@ int kmpSearch(const string& text, const string& pattern, const vector<int>& lps)
 
 int main() {
     ios_base::sync_with_stdio(0);
-    cin.tie(0);
+	cin.tie(0);
+    //freopen("input.in", "r", stdin);
+    //freopen("output.out", "w", stdout);
 
     int t;
     cin >> t;
