@@ -1,12 +1,15 @@
 /*Cuarta edición*/
-
+/*Utilizamos un conjunto para reestablecer las propiedades cambiando el tiempo de las medicinas
+así no se tomara una medicina de manera consecutiva.*/
 #include <bits/stdc++.h>
 using namespace std;
 
 int main()
 {
     ios_base::sync_with_stdio(0);
-    cin.tie(0);
+	cin.tie(0);
+    //freopen("input.in", "r", stdin);
+    //freopen("output.out", "w", stdout);
     
     int t, n, m;
     
