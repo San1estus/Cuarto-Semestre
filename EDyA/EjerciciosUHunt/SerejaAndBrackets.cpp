@@ -1,3 +1,8 @@
+/*Construimos un Segment Tree a partir de la cadena de paréntesis, donde cada
+nodo almacena la información sobre subsecuencias válidas y paréntesis sobrantes.
+Para cada query, se combina la información de los nodos hijos para calcular la 
+longitud de la máxima subsecuencia válida en el rango especificado.*/
+
 #include <bits/stdc++.h>
 using namespace std;
 

@@ -1,4 +1,6 @@
-/*Cuarta edición*/
+/*Conforme recibimos los resultados del i-esimo partido, vamos contando la racha de no victorias
+si hay una victoria entonces se reinicia la racha, pero si en algun momento la racha se alcanzo
+3 dejamos de contar los juegos en los que participo Rafa.*/
 #include <iostream>
 using namespace std;
 int main()

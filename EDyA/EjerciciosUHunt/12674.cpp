@@ -1,3 +1,7 @@
+/*Utilizamos un Segment Tree para calcular las alturas minimas entre los intervalos
+calculamos la prominencia comparando la altura de un nuevo pico con las alturas
+minimas si su prominencia es mayor a 150000 como indica el problema entonces es un ultra
+y se añade.*/
 #include <bits/stdc++.h>
 using namespace std;
 

@@ -1,3 +1,5 @@
+/*Solo ocupamos verificar las condiciones dadas por el problema
+para cada posicion de la calle.*/
 #include <bits/stdc++.h>
 using namespace std;
 

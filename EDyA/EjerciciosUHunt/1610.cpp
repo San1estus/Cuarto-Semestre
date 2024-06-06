@@ -1,4 +1,8 @@
-/*Cuarta edición*/
+/*Primero ordenamos los nombers en orden ascendente. Luego como tenemos una
+cantidad par de nombres, solo ocupamos verificar el valor de n/2-1 ya que
+es el mayor de la mitad inferior y el menor de la mitad superior, recorremos
+hasta encontrar la primera discrepancia enter n/2-1 y n/2 y en esta posicion 
+añadimos la letra con 1 valor mayor en orden lexicografico*/
 #include <bits/stdc++.h>
 #define min(a,b) a < b ? a : b
 

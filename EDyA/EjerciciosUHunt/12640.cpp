@@ -1,4 +1,7 @@
-/*Cuarta edición*/
+/*dp[i] representa el maximo entre la suma de dp[i-1] y el numero actual
+y el numero actual, si dp[i] llegar a tomar un valor negativos, entonces
+el valor cambiaria si el numero actual es mayor a ese negativo, resp
+registra el maximo total alcanzado hasta el i-esimo numero.*/
 #include <bits/stdc++.h>
 #define max(a,b) a < b ? b : a
 using namespace std;
@@ -15,10 +18,6 @@ vector<int> string2Arreglo(const string &str) {
     
     return result;
 }
-/*dp[i] representa el maximo entre la suma de dp[i-1] y el numero actual
-y el numero actual, si dp[i] llegar a tomar un valor negativos, entonces
-el valor cambiaria si el numero actual es mayor a ese negativo, resp
-registra el maximo total alcanzado hasta el i-esimo numero.*/
 int main()
 {
     ios_base::sync_with_stdio(0);

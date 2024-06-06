@@ -1,3 +1,10 @@
+/*Si es posible armar una pareja de * entonces esta pareja ya no se podra
+conectar con otro nodo de forma que sea impar, esto lo podemos ver en un
+grafo bipartito donde separamos los nodos que pueden formar parejas y los
+nodos que se queden solos, conectamos todas las parejas a la fuente
+y los solitarios al sumidero. La cantidad minima de antenas estara dada 
+por la cantidad total de * menos el flujo.*/
+
 #include <bits/stdc++.h>
 using namespace std;
 

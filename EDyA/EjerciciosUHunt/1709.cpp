@@ -1,4 +1,6 @@
-/*Cuarta edición*/
+/*Ponemos la formula como se nos da en el problema, la evaluamos en los valores
+de 2 hasta n, cuando vale 1 lo tomamos como nuestro maximo inicial, luego
+evaluamos el declive que hay entre precios.*/
 #include <bits/stdc++.h>
 using namespace std;
 

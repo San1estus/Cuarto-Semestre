@@ -1,4 +1,9 @@
-/*La idea del problema es encontrar el MST y el segundo MST*/
+/*La idea del problema es encontrar el MST y el segundo MST. Al encontrar el MST
+marcamos los nodos recorridos como invalidos y usados. Para el segundo MST
+evaluamos sobre los nodos usados pues son de interes, la respuesta sera
+el del nodo que nos regrese el minimo con los usados, se debe verificar que
+el MST tenga V-1 aristas, o bien que es conexo y todo esta en un solo conjunto
+de nodos.*/
 
 #include <bits/stdc++.h> 
 using namespace std; 

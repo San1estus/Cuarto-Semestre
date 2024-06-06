@@ -1,4 +1,6 @@
-/*Cuarta edición*/
+/*Si 2 vectores estan sobre una misma linea, como trabajamos con enteros, entonces uno puede ser expresado
+como multiplo del otro, si este es el caso, el vector mas cercano al origen siempre sera visible, mientras
+que los otros solo seran visibles si tienen una altura mayor.*/
 #include <bits/stdc++.h>
 #define max(a,b) a < b ? b : a
 using namespace std;
@@ -28,9 +30,6 @@ bool comp_luz(const luz& a, const luz& b){
     return a.x < b.x;
 }
 
-/*Si 2 vectores estan sobre una misma linea, como trabajamos con enteros, entonces uno puede ser expresado
-como multiplo del otro, si este es el caso, el vector mas cercano al origen siempre sera visible, mientras
-que los otros solo seran visibles si tienen una altura mayor.*/
 
 int main()
 {

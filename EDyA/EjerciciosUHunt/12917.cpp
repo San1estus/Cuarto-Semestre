@@ -1,4 +1,6 @@
-/*Cuarta edición*/
+/*Si la cantidad de cazadores menos la cantidad de objetos es menor a 
+la cantidad de jugadores, entonces es victoria, en caso contrario es
+derrota.*/
 #include <iostream>
 using namespace std;
 int main()
