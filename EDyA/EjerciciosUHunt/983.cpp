@@ -1,10 +1,10 @@
-/*Cuarta edición*/
-#include <iostream>
-using namespace std;
-
 /*dp[i][j] es la sma de los rectangulos de (1,1) hasta (i,j)
 como puede haber traslapes a la hora de la suma se restan 
 estos elementos duplicados.*/
+#include <iostream>
+using namespace std;
+
+
 int main()
 {
     ios_base::sync_with_stdio(0);

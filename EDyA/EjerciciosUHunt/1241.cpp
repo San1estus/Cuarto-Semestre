@@ -1,13 +1,12 @@
-#include <bits/stdc++.h>
-using namespace std;
-
-/* 
-Podemos ver las llaves del torneo como 0s y 1s:
+/* Podemos ver las llaves del torneo como 0s y 1s:
 1 si el participante está, 0 si no está. Si en una llave falta 1 de los participantes, 
 hay un w/o (walkover), si faltan 2, habrá w/o en la siguiente ronda, por lo que se pone 
 el valor correspondiente en la siguiente llave a 0. Además la siguiente ronda tendra 
-la mitad de llaves, por lo que se reduce el tamaño a la mitad.
-*/
+la mitad de llaves, por lo que se reduce el tamaño a la mitad.*/
+#include <bits/stdc++.h>
+using namespace std;
+
+
 
 int main() {
     ios_base::sync_with_stdio(0);
