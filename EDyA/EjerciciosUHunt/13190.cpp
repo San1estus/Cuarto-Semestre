@@ -1,4 +1,3 @@
-/*Cuarta edición*/
 /*Utilizamos un conjunto para reestablecer las propiedades cambiando el tiempo de las medicinas
 así no se tomara una medicina de manera consecutiva.*/
 #include <bits/stdc++.h>

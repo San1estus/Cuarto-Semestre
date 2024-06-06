@@ -1,10 +1,9 @@
-#include <bits/stdc++.h>
-using namespace std;
-
 /*Iteramos de 1 hasta la raiz cuadrada de N, pues los divisores vienen por
 pares ya que si n divide a N, entonces N/n también, si un numero es divisor
 de N verificamos que no sea multiplo de K, si es el caso lo añadimos a la
 suma en caso contrario lo saltamos*/
+#include <bits/stdc++.h>
+using namespace std;
 
 
 void respuesta(int N, int K) {
