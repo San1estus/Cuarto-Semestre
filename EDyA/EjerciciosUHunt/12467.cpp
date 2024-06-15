@@ -1,5 +1,5 @@
 /*Nos interesa encontrar el substring comun mas grande entre una cadena
-y ella misma, pero invertida, para esto podemo usar el arreglo de LPS
+y ella misma, pero invertida, para esto podemos usar el arreglo de LPS
 utilizando KMP.*/
 #include <bits/stdc++.h>
 using namespace std;
